@@ -1,6 +1,7 @@
 // crear una nueva scena
 let gameScene = new Phaser.Scene('Game');
-
+var gameW = 0;
+var gameH = 0;
 // Load assets
 gameScene.preload = function(){
     // load images
@@ -16,8 +17,8 @@ gameScene.create = function(){
     let bg = this.add.sprite(0,0,'background');
     // colocar en el centro
     
-    let gameW = this.sys.game.config.width;
-    let gameH = this.sys.game.config.height;
+    gameW = this.sys.game.config.width;
+    gameH = this.sys.game.config.height;
 
     bg.setPosition(gameW/2,gameH/2);
 
@@ -36,17 +37,52 @@ gameScene.create = function(){
     this.altoPlayer = this.jugador.height;
     this.anchoPlayer = this.jugador.width;
 
-    console.log(this.jugador);
-
+    this.flip = false;
 }
 
 // el update se realiza a 60 veces por segundo
 
 gameScene.update = function(){
     
-    if (this.jugador.scaleX < 2){
-        this.jugador.setScale(this.jugador.scaleX + 0.01);
+    vigilar(this.jugador, 'x', 0.5);
+    vigilar(this.enemy1, 'y', 0.5);
+}
+
+/*
+* Movimientos ciclicos
+*/
+
+function vigilar(jugador, eje, paso){
+
+    if (eje.toLowerCase() == 'x'){
+        if (jugador.x < gameW && jugador.flipX == false ){
+            jugador.x += paso;
+        }
+        if (jugador.x == gameW && jugador.flipX == false){
+            jugador.flipX = true;
+        }
+        if (jugador.flipX == true && jugador.x > 0){
+            jugador.x -= paso;
+        }
+        if (jugador.x == 0){
+            jugador.flipX= false;
+        }
+    }else{
+        if (jugador.y < gameH && jugador.flipY == false ){
+            jugador.y += paso;
+        }
+        if (jugador.y == gameH && jugador.flipY == false){
+            jugador.flipY = true;
+        }
+        if (jugador.flipY == true && jugador.y > 0){
+            jugador.y -= paso;
+        }
+        if (jugador.y == 0){
+            jugador.flipY= false;
+        }
     }
+
+    
 }
 
 
